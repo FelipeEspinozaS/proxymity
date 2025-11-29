@@ -1,0 +1,20 @@
+{
+  "name": "proxymity",
+  "description": "Debug APIs in close proximity. A collaborative tool for real-time request testing.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FelipeEspinozaS/proxymity.git"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "server": "npm run dev --workspace=@proxymity/server",
+    "client": "npm run dev --workspace=@proxymity/client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
