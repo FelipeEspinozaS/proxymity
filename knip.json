@@ -1,0 +1,16 @@
+{
+  "ignoreExportsUsedInFile": true,
+  "ignore": [
+    "packages/client/src/store/useAppStore.ts"
+  ],
+  "ignoreDependencies": [
+    "zustand",
+    "nanoid",
+    "axios",
+    "cors",
+    "dotenv",
+    "@types/cors",
+    "ts-node",
+    "tsconfig-paths"
+  ]
+}
