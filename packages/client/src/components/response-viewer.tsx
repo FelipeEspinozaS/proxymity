@@ -54,7 +54,6 @@ export function ResponseViewer({ response, isLoading }: ResponseViewerProps) {
       await navigator.clipboard.writeText(content)
       setIsCopied(true)
       
-      // Revertir el icono después de 2 segundos
       setTimeout(() => setIsCopied(false), 2000)
     } catch (err) {
       console.error("Failed to copy:", err)
@@ -99,9 +98,9 @@ export function ResponseViewer({ response, isLoading }: ResponseViewerProps) {
             style={vscDarkPlus}
             customStyle={{
               margin: 0,
-              padding: '1rem', // Usamos p-4 (1rem) internamente como en su diseño original
-              background: 'transparent', // Mantenemos transparente para que se vea el bg-muted/50 de atrás
-              fontSize: '0.875rem', // text-sm
+              padding: '1rem',
+              background: 'transparent',
+              fontSize: '0.875rem',
               lineHeight: '1.5',
               fontFamily: 'var(--font-mono)',
             }}
@@ -114,8 +113,3 @@ export function ResponseViewer({ response, isLoading }: ResponseViewerProps) {
     </div>
   )
 }
-
-
-{/* <pre className="rounded-lg bg-muted/50 p-4 text-sm">
-    <code className="font-mono text-foreground">{JSON.stringify(response.data, null, 2)}</code>
-</pre> */}

@@ -17,7 +17,7 @@ export function RequestEditor({ request, onRequestChange }: RequestEditorProps) 
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#00000000', // Fondo transparente
+        'editor.background': '#00000000', // Transparent background
       }
     });
   }
@@ -51,7 +51,6 @@ export function RequestEditor({ request, onRequestChange }: RequestEditorProps) 
         <TabsContent value="body" className="flex-1 overflow-auto p-6 mt-0">
           <div className="flex h-full flex-col gap-2">
             
-            {/* Contenedor estilizado para parecerse a un Input de Shadcn/UI */}
             <div className="relative flex-1 rounded-md border border-input bg-transparent shadow-sm focus-within:ring-1 focus-within:ring-ring transition-all overflow-hidden">
               <Editor
                 height="100%"
@@ -59,19 +58,18 @@ export function RequestEditor({ request, onRequestChange }: RequestEditorProps) 
                 defaultValue={request.body}
                 value={request.body}
                 onChange={(value) => onRequestChange({ ...request, body: value || "" })}
-                theme="proxymity-dark" // Usamos nuestro tema personalizado
+                theme="proxymity-dark"
                 beforeMount={handleEditorWillMount}
                 options={{
-                  minimap: { enabled: false }, // Ocultar el mapa pequeño de la derecha
+                  minimap: { enabled: false },
                   fontSize: 14,
-                  lineNumbers: "off", // Mostrar números de línea (útil para errores)
+                  lineNumbers: "off",
                   scrollBeyondLastLine: false,
                   automaticLayout: true,
                   tabSize: 2,
                   formatOnPaste: true,
                   formatOnType: true,
-                  fontFamily: 'var(--font-mono)', // Usar Geist Mono
-                  // Ajustes visuales para que parezca un input simple y no un IDE completo
+                  fontFamily: 'var(--font-mono)',
                   renderLineHighlight: "none",
                   scrollbar: {
                     vertical: "auto",

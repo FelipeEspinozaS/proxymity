@@ -6,7 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     
-    /* Configuración de Rutas para el Monorepo */
+    /* Routing */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
