@@ -9,8 +9,10 @@
     /* Configuración de Rutas para el Monorepo */
     "baseUrl": ".",
     "paths": {
+      "@/*": ["./src/*"],
       "@proxymity/shared": ["../shared/src/index.ts"]
     },
+    
 
     /* Bundler mode */
     "moduleResolution": "bundler",
