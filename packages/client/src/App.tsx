@@ -1,29 +1,75 @@
-import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-import { APP_NAME, type ITestMessage } from '@proxymity/shared';
-import { HeadersEditor } from './components/HeadersEditor';
-
-// Conectamos al puerto 3001 donde está el server
-const socket = io('http://localhost:3001');
+import { useState } from "react"
+import { WorkspaceHeader } from "@/components/workspace-header"
+import { RequestControls } from "@/components/request-controls"
+import { RequestEditor } from "@/components/request-editor"
+import { ResponseViewer } from "@/components/response-viewer"
+import type { IRequestData, IResponseData } from "@proxymity/shared/src/types"
 
 function App() {
-  const [message, setMessage] = useState<string>('Esperando...');
+  const [roomId] = useState<string>("example-room-id");
+  const [activeUsers] = useState<number>(3);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    socket.on('hello', (data: ITestMessage) => {
-      setMessage(`${data.from} dice: ${data.text}`);
-    });
+  const [request, setRequest] = useState<IRequestData>({
+    method: "GET",
+    url: "https://api.example.com/users",
+    headers: [],
+    queryParams: [],
+    body: "",
+  })
 
-    return () => { socket.off('hello'); };
-  }, []);
+  const [response, setResponse] = useState<IResponseData | null>(null)
+
+  const handleSendRequest = async () => {
+    setIsLoading(true)
+    // Simulate API call
+    setTimeout(() => {
+      setResponse({
+        status: 200,
+        statusText: "OK",
+        data: {
+          users: [
+            { id: 1, name: "John Doe", email: "john@example.com" },
+            { id: 2, name: "Jane Smith", email: "jane@example.com" },
+          ],
+        },
+        headers: {
+          "content-type": "application/json",
+          "cache-control": "no-cache",
+        },
+        time: 145,
+        size: 2048,
+        timestamp: Date.now(),
+      })
+      setIsLoading(false)
+    }, 1000)
+  }
+
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>{APP_NAME}</h1>
-      <h2>Estado: {message}</h2>
-      <HeadersEditor />
+    <div className="flex h-screen flex-col bg-background">
+      <WorkspaceHeader roomId={roomId} activeUsers={activeUsers} />
+
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <RequestControls
+          request={request}
+          onRequestChange={setRequest}
+          onSend={handleSendRequest}
+          isLoading={isLoading}
+        />
+
+        <div className="flex flex-1 overflow-hidden">
+          <div className="w-1/2 border-r border-border overflow-hidden">
+            <RequestEditor request={request} onRequestChange={setRequest} />
+          </div>
+
+          <div className="w-1/2 overflow-hidden">
+            <ResponseViewer response={response} isLoading={isLoading} />
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
 export default App;
