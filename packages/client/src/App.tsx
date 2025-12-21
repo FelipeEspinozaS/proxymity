@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { APP_NAME, type ITestMessage } from '@proxymity/shared';
+import { HeadersEditor } from './components/HeadersEditor';
 
 // Conectamos al puerto 3001 donde está el server
 const socket = io('http://localhost:3001');
@@ -20,6 +21,7 @@ function App() {
     <div style={{ padding: 20 }}>
       <h1>{APP_NAME}</h1>
       <h2>Estado: {message}</h2>
+      <HeadersEditor />
     </div>
   );
 }
