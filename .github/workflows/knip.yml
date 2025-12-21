@@ -1,0 +1,42 @@
+name: Code Cleanup (Knip)
+
+on:
+  # Se ejecuta al abrir o actualizar una Pull Request
+  pull_request:
+    types: [opened, synchronize, reopened]
+  # Opcional: También se ejecuta al hacer push a main para mantener la línea base limpia
+  push:
+    branches: [main]
+
+jobs:
+  knip-analysis:
+    name: Find Unused Code
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Instalar pnpm (Gestor de paquetes)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10 # Asegúrese de que coincida con su versión local
+
+      # 3. Configurar Node.js y caché
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25
+          cache: 'pnpm'
+
+      # 4. Instalar dependencias
+      # --frozen-lockfile asegura que se instale exactamente lo que hay en pnpm-lock.yaml
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 5. Ejecutar Knip
+      # Si Knip encuentra algo, devolverá un error (exit code 1) y fallará la acción.
+      - name: Run Knip Analysis
+        run: npx knip
