@@ -22,7 +22,7 @@ interface AppState {
   removeHeader: (id: string) => void;
   updateHeader: (id: string, field: keyof IKeyValue, value: string | boolean) => void;
 
-  // // Query Param Actions
+  // Query Param Actions
   addQueryParam: () => void;
   removeQueryParam: (id: string) => void;
   updateQueryParam: (id: string, field: keyof IKeyValue, value: string | boolean) => void;
