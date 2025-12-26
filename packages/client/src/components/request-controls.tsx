@@ -12,11 +12,11 @@ interface RequestControlsProps {
 }
 
 const METHOD_COLORS: Record<HttpMethod, string> = {
-  GET: "text-blue-500 bg-blue-500/10",
-  POST: "text-emerald-500 bg-emerald-500/10",
-  PUT: "text-amber-500 bg-amber-500/10",
-  DELETE: "text-red-500 bg-red-500/10",
-  PATCH: "text-purple-500 bg-purple-500/10",
+  GET: "text-blue-500",
+  POST: "text-emerald-500",
+  PUT: "text-amber-500",
+  DELETE: "text-red-500",
+  PATCH: "text-purple-500",
 }
 
 export function RequestControls({ request, onRequestChange, onSend, isLoading }: RequestControlsProps) {
@@ -30,21 +30,17 @@ export function RequestControls({ request, onRequestChange, onSend, isLoading }:
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="GET" className="font-semibold text-blue-500">
-            GET
-          </SelectItem>
-          <SelectItem value="POST" className="font-semibold text-emerald-500">
-            POST
-          </SelectItem>
-          <SelectItem value="PUT" className="font-semibold text-amber-500">
-            PUT
-          </SelectItem>
-          <SelectItem value="DELETE" className="font-semibold text-red-500">
-            DELETE
-          </SelectItem>
-          <SelectItem value="PATCH" className="font-semibold text-purple-500">
-            PATCH
-          </SelectItem>
+          {
+            Object.keys(METHOD_COLORS).map((method) => (
+              <SelectItem
+                key={method}
+                value={method}
+                className={`font-semibold ${METHOD_COLORS[method as HttpMethod]}`}
+              >
+                {method}
+              </SelectItem>
+            ))
+          }
         </SelectContent>
       </Select>
 
