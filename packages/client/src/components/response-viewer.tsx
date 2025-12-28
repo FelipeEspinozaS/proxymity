@@ -2,17 +2,14 @@ import { useState } from "react"
 import { Loader2, Copy, Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import type { IResponseData } from "@proxymity/shared/src/types"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { useAppStore } from "@/store/useAppStore"
 
-interface ResponseViewerProps {
-  response: IResponseData | null
-  isLoading: boolean
-}
-
-export function ResponseViewer({ response, isLoading }: ResponseViewerProps) {
+export function ResponseViewer() {
     const [isCopied, setIsCopied] = useState(false)
+    const isLoading = useAppStore((state) => state.isLoading);
+    const response = useAppStore((state) => state.response);
   
     if (isLoading) {
     return (
