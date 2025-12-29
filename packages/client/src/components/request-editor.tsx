@@ -16,7 +16,7 @@ export function RequestEditor() {
   }
 
     const request = useAppStore((state) => state.request);
-    const body = useAppStore((state) => state.request.body);
+    const body = request.body;
     const setBody = useAppStore((state) => state.setBody);
 
     const addHeader = useAppStore((state) => state.addHeader);

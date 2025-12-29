@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { HttpMethod } from "@proxymity/shared/src/types"
-import { useAppStore } from "@proxymity/client/src/store/useAppStore"
+import { useAppStore } from "@/store/useAppStore"
 
 interface RequestControlsProps {
   onSend: () => void
@@ -59,9 +59,9 @@ export function RequestControls({ onSend }: RequestControlsProps) {
 
       <Button onClick={onSend} disabled={isLoading} className="gap-2 min-w-28" size="default">
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" /> // Spinner girando
+          <Loader2 className="h-4 w-4 animate-spin" /> // Loading spinner
         ) : (
-          <Play className="h-4 w-4" /> // Play normal
+          <Play className="h-4 w-4" /> // Play icon
         )}
         {isLoading ? "Sending..." : "Send"}
       </Button>

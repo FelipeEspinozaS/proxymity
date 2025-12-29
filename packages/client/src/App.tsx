@@ -3,7 +3,7 @@ import { WorkspaceHeader } from "@/components/workspace-header"
 import { RequestControls } from "@/components/request-controls"
 import { RequestEditor } from "@/components/request-editor"
 import { ResponseViewer } from "@/components/response-viewer"
-import { useAppStore } from "@proxymity/client/src/store/useAppStore"
+import { useAppStore } from "@/store/useAppStore"
 
 function App() {
   const [roomId] = useState<string>("example-room-id");
