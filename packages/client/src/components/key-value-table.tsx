@@ -6,31 +6,14 @@ import type { IKeyValue } from "@proxymity/shared/src/types"
 
 interface KeyValueTableProps {
   items: IKeyValue[]
-  onChange: (items: IKeyValue[]) => void
+  onAdd: () => void
+  onUpdate: (id: string, field: keyof IKeyValue, value: string | boolean) => void;
+  onDelete: (id: string) => void;
   placeholder?: string
 }
 
-export function KeyValueTable({ items, onChange, placeholder = "Key" }: KeyValueTableProps) {
-  const addRow = () => {
-    onChange([
-      ...items,
-      {
-        id: crypto.randomUUID(),
-        key: "",
-        value: "",
-        isEnabled: true,
-      },
-    ])
-  }
-
-  const updateRow = (id: string, field: keyof IKeyValue, value: string | boolean) => {
-    onChange(items.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
-  }
-
-  const deleteRow = (id: string) => {
-    onChange(items.filter((item) => item.id !== id))
-  }
-
+export function KeyValueTable({ items, onAdd, onDelete, onUpdate, placeholder = "Key" }: KeyValueTableProps) {
+  
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 text-xs font-medium text-muted-foreground px-2">
@@ -44,13 +27,13 @@ export function KeyValueTable({ items, onChange, placeholder = "Key" }: KeyValue
         <div key={item.id} className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-center">
           <Checkbox
             checked={item.isEnabled}
-            onCheckedChange={(checked) => updateRow(item.id, "isEnabled", checked === true)}
+            onCheckedChange={(checked) => onUpdate(item.id, "isEnabled", checked === true)}
           />
           <Input
             type="text"
             placeholder={placeholder}
             value={item.key}
-            onChange={(e) => updateRow(item.id, "key", e.target.value)}
+            onChange={(e) => onUpdate(item.id, "key", e.target.value)}
             className="font-mono text-sm"
             disabled={!item.isEnabled}
           />
@@ -58,17 +41,17 @@ export function KeyValueTable({ items, onChange, placeholder = "Key" }: KeyValue
             type="text"
             placeholder="Value"
             value={item.value}
-            onChange={(e) => updateRow(item.id, "value", e.target.value)}
+            onChange={(e) => onUpdate(item.id, "value", e.target.value)}
             className="font-mono text-sm"
             disabled={!item.isEnabled}
           />
-          <Button variant="ghost" size="icon" onClick={() => deleteRow(item.id)} className="h-8 w-8">
+          <Button variant="ghost" size="icon" onClick={() => onDelete(item.id)} className="h-8 w-8">
             <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
           </Button>
         </div>
       ))}
 
-      <Button variant="outline" size="sm" onClick={addRow} className="w-full gap-2 mt-4 bg-transparent">
+      <Button variant="outline" size="sm" onClick={onAdd} className="w-full gap-2 mt-4 bg-transparent">
         <Plus className="h-4 w-4" />
         Add {placeholder}
       </Button>

@@ -1,17 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { KeyValueTable } from "@/components/key-value-table"
-import type { IRequestData } from "@proxymity/shared/src/types"
-
-
+import { useAppStore } from "@/store/useAppStore"
 import Editor, { type BeforeMount } from "@monaco-editor/react"
 
-interface RequestEditorProps {
-  request: IRequestData
-  onRequestChange: (request: IRequestData) => void
-}
-
-export function RequestEditor({ request, onRequestChange }: RequestEditorProps) {
-    const handleEditorWillMount: BeforeMount = (monaco) => {
+export function RequestEditor() {
+  const handleEditorWillMount: BeforeMount = (monaco) => {
     monaco.editor.defineTheme('proxymity-dark', {
       base: 'vs-dark',
       inherit: true,
@@ -22,8 +15,20 @@ export function RequestEditor({ request, onRequestChange }: RequestEditorProps) 
     });
   }
 
+  const body = useAppStore((state) => state.request.body);
+  const headers = useAppStore((state) => state.request.headers);
+  const queryParams = useAppStore((state) => state.request.queryParams);
+  
+  const setBody = useAppStore((state) => state.setBody);
+  const addHeader = useAppStore((state) => state.addHeader);
+  const removeHeader = useAppStore((state) => state.removeHeader);
+  const updateHeader = useAppStore((state) => state.updateHeader);
 
-    return (
+  const addQueryParam = useAppStore((state) => state.addQueryParam);
+  const removeQueryParam = useAppStore((state) => state.removeQueryParam);
+  const updateQueryParam = useAppStore((state) => state.updateQueryParam);
+
+  return (
     <div className="flex h-full flex-col">
       <Tabs defaultValue="params" className="flex flex-1 flex-col">
         <TabsList className="w-full justify-start rounded-none border-b border-border bg-transparent px-6">
@@ -34,16 +39,20 @@ export function RequestEditor({ request, onRequestChange }: RequestEditorProps) 
 
         <TabsContent value="params" className="flex-1 overflow-auto p-6 mt-0">
           <KeyValueTable
-            items={request.queryParams}
-            onChange={(queryParams) => onRequestChange({ ...request, queryParams })}
+            items={queryParams}
+            onAdd={addQueryParam}
+            onUpdate={updateQueryParam}
+            onDelete={removeQueryParam}
             placeholder="Query Parameter"
           />
         </TabsContent>
 
         <TabsContent value="headers" className="flex-1 overflow-auto p-6 mt-0">
           <KeyValueTable
-            items={request.headers}
-            onChange={(headers) => onRequestChange({ ...request, headers })}
+            items={headers}
+            onAdd={addHeader}
+            onUpdate={updateHeader}
+            onDelete={removeHeader}
             placeholder="Header"
           />
         </TabsContent>
@@ -55,9 +64,9 @@ export function RequestEditor({ request, onRequestChange }: RequestEditorProps) 
               <Editor
                 height="100%"
                 defaultLanguage="json"
-                defaultValue={request.body}
-                value={request.body}
-                onChange={(value) => onRequestChange({ ...request, body: value || "" })}
+                defaultValue={body}
+                value={body}
+                onChange={(value) => setBody(value || "")}
                 theme="proxymity-dark"
                 beforeMount={handleEditorWillMount}
                 options={{

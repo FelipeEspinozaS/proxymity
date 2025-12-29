@@ -4,8 +4,6 @@
     "packages/client/src/store/useAppStore.ts"
   ],
   "ignoreDependencies": [
-    "zustand",
-    "nanoid",
     "axios",
     "cors",
     "dotenv",
