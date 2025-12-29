@@ -4,7 +4,7 @@ import { useAppStore } from "@/store/useAppStore"
 import Editor, { type BeforeMount } from "@monaco-editor/react"
 
 export function RequestEditor() {
-    const handleEditorWillMount: BeforeMount = (monaco) => {
+  const handleEditorWillMount: BeforeMount = (monaco) => {
     monaco.editor.defineTheme('proxymity-dark', {
       base: 'vs-dark',
       inherit: true,
@@ -15,19 +15,20 @@ export function RequestEditor() {
     });
   }
 
-    const request = useAppStore((state) => state.request);
-    const body = request.body;
-    const setBody = useAppStore((state) => state.setBody);
+  const body = useAppStore((state) => state.request.body);
+  const headers = useAppStore((state) => state.request.headers);
+  const queryParams = useAppStore((state) => state.request.queryParams);
+  
+  const setBody = useAppStore((state) => state.setBody);
+  const addHeader = useAppStore((state) => state.addHeader);
+  const removeHeader = useAppStore((state) => state.removeHeader);
+  const updateHeader = useAppStore((state) => state.updateHeader);
 
-    const addHeader = useAppStore((state) => state.addHeader);
-    const removeHeader = useAppStore((state) => state.removeHeader);
-    const updateHeader = useAppStore((state) => state.updateHeader);
+  const addQueryParam = useAppStore((state) => state.addQueryParam);
+  const removeQueryParam = useAppStore((state) => state.removeQueryParam);
+  const updateQueryParam = useAppStore((state) => state.updateQueryParam);
 
-    const addQueryParam = useAppStore((state) => state.addQueryParam);
-    const removeQueryParam = useAppStore((state) => state.removeQueryParam);
-    const updateQueryParam = useAppStore((state) => state.updateQueryParam);
-
-    return (
+  return (
     <div className="flex h-full flex-col">
       <Tabs defaultValue="params" className="flex flex-1 flex-col">
         <TabsList className="w-full justify-start rounded-none border-b border-border bg-transparent px-6">
@@ -38,7 +39,7 @@ export function RequestEditor() {
 
         <TabsContent value="params" className="flex-1 overflow-auto p-6 mt-0">
           <KeyValueTable
-            items={request.queryParams}
+            items={queryParams}
             onAdd={addQueryParam}
             onUpdate={updateQueryParam}
             onDelete={removeQueryParam}
@@ -48,7 +49,7 @@ export function RequestEditor() {
 
         <TabsContent value="headers" className="flex-1 overflow-auto p-6 mt-0">
           <KeyValueTable
-            items={request.headers}
+            items={headers}
             onAdd={addHeader}
             onUpdate={updateHeader}
             onDelete={removeHeader}
