@@ -59,7 +59,7 @@ export function RequestControls({ onSend }: RequestControlsProps) {
 
       <Button onClick={onSend} disabled={isLoading} className="gap-2 min-w-28" size="default">
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" /> // Spinner girando
+          <Loader2 className="h-4 w-4 animate-spin" /> // Loading spinner
         ) : (
           <Play className="h-4 w-4" /> // Play normal
         )}
