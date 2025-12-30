@@ -28,6 +28,12 @@ class StateStore {
     return this.rooms.get(roomId)!;
   }
 
+  public updateUserCount(roomId: string, count: number) {
+    const room = this.getOrCreateRoom(roomId);
+    room.activeUsers = count;
+    return room;
+  }
+
   public updateMethod(roomId: string, method: HttpMethod) {
     const room = this.getOrCreateRoom(roomId);
     
