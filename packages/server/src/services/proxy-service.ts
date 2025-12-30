@@ -24,6 +24,25 @@ const parseRequestBody = (bodyStr: string): unknown | undefined => {
   }
 };
 
+const calculateResponseSize = (headers: Record<string, any>, data: any): number => {
+  if (headers['content-length']) {
+    const parsed = parseInt(headers['content-length'], 10);
+    if (!isNaN(parsed)) return parsed;
+  }
+
+  //  no content-length header, estimate size from data
+  if (!data) return 0;
+
+  if (typeof data === 'string') return data.length;
+
+  // If data is an object, stringify and measure length
+  try {
+    return JSON.stringify(data).length;
+  } catch (e) {
+    console.warn('[ProxyService] Could not calculate size for response data');
+    return 0; 
+  }
+};
 
 const createSuccessResponse = (
   axiosResp: AxiosResponse, 
@@ -34,7 +53,7 @@ const createSuccessResponse = (
   data: axiosResp.data,
   headers: axiosResp.headers as Record<string, string>,
   time: durationMs,
-  size: JSON.stringify(axiosResp.data).length,
+  size: calculateResponseSize(axiosResp.headers, axiosResp.data),
   timestamp: Date.now(),
 });
 
