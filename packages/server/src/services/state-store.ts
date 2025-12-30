@@ -67,7 +67,7 @@ class StateStore {
     const room = this.getOrCreateRoom(roomId);
     
     if (typeof body === 'string') {
-      if (body.length > 100_000) { // Límite ~100KB
+      if (body.length > 100_000) { // Limit ~100KB
         console.warn(`[Store] Body too large rejected for room ${roomId}`);
         return room;
       }
