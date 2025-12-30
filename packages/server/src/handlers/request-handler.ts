@@ -9,6 +9,10 @@ const handleExecuteRequest = async (
   roomId: string
 ) => {
   const roomState = stateStore.getOrCreateRoom(roomId);
+  if (roomState.isLoading) {
+    console.warn(`[Handler] Request ignored for room ${roomId}: Another request is pending.`);
+    return; 
+  }
   const requestData = roomState.request;
 
   stateStore.setLoading(roomId, true);
