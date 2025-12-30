@@ -62,7 +62,7 @@ export const executeRequest = async (requestData: IRequestData): Promise<IRespon
 
   // Basic security check to prevent SSRF to localhost
   if (requestData.url.includes('localhost') || requestData.url.includes('127.0.0.1')) {
-     return createErrorResponse(new Error("Access to local resources is forbidden"), 0);
+     return createErrorResponse(new Error('Access to local resources is forbidden'), 0);
   }
 
   const config: AxiosRequestConfig = {
