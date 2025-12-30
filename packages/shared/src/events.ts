@@ -17,7 +17,7 @@ export const SOCKET_EVENTS = {
     SYNC_STATE: 'server:sync_state',     // Payload: IRoomState completo
     USER_COUNT: 'server:user_count',     // Payload: number
     BROADCAST_CHANGE: 'server:broadcast_change', 
-    REQUEST_STARTED: 'server:request_started',   // "Cargando..."
+    REQUEST_STARTED: 'server:request_started',   // "Loading..."
     REQUEST_COMPLETE: 'server:request_complete', // Payload: IResponseData
     ERROR: 'server:error'                        // Payload: { message: string }
   }
