@@ -80,11 +80,12 @@ class StateStore {
     const room = this.getOrCreateRoom(roomId);
     
     if (Array.isArray(list)) {
+      let trimmedList = list;
       if (list.length > 50) {
-         console.warn(`[Store] Too many ${type} items, trimming list.`);
-         list = list.slice(0, 50);
+        console.warn(`[Store] Too many ${type} items, trimming list.`);
+        trimmedList = list.slice(0, 50);
       }
-      room.request[type] = list;
+      room.request[type] = trimmedList;
     }
     return room;
   }
