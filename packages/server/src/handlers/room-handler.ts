@@ -6,12 +6,14 @@ import { stateStore } from '../services/state-store';
 const handleJoinRoom = (io: Server, socket: Socket, roomId: string) => {
   socket.join(roomId);
   
-  const currentState = stateStore.getOrCreateRoom(roomId);
-  socket.emit(SOCKET_EVENTS.SERVER.SYNC_STATE, currentState);
-  
   const userCount = io.sockets.adapter.rooms.get(roomId)?.size || 0;
-  io.to(roomId).emit(SOCKET_EVENTS.SERVER.USER_COUNT, userCount);
+  stateStore.updateUserCount(roomId, userCount);
   
+  const currentState = stateStore.getOrCreateRoom(roomId);
+
+  socket.emit(SOCKET_EVENTS.SERVER.SYNC_STATE, currentState);
+  io.to(roomId).emit(SOCKET_EVENTS.SERVER.USER_COUNT, userCount);
+
   console.log(`[Room] ${socket.id} joined ${roomId}. State synced.`);
 };
 
@@ -19,8 +21,12 @@ const handleJoinRoom = (io: Server, socket: Socket, roomId: string) => {
 const handleDisconnecting = (io: Server, socket: Socket) => {
   for (const roomId of socket.rooms) {
     if (roomId !== socket.id) {
-      const currentCount = io.sockets.adapter.rooms.get(roomId)?.size || 1;
-      io.to(roomId).emit(SOCKET_EVENTS.SERVER.USER_COUNT, currentCount - 1);
+      const currentSize = io.sockets.adapter.rooms.get(roomId)?.size || 1;
+      const newCount = currentSize - 1;
+
+      stateStore.updateUserCount(roomId, newCount);
+      
+      io.to(roomId).emit(SOCKET_EVENTS.SERVER.USER_COUNT, newCount);
     }
   }
 };
@@ -52,6 +58,11 @@ const handleUpdateBody = (socket: Socket, roomId: string, body: string) => {
 
 export const registerRoomHandlers = (io: Server, socket: Socket) => {
   socket.on(SOCKET_EVENTS.CLIENT.JOIN_ROOM, (roomId: string) => {
+    if (!roomId || typeof roomId !== 'string' || roomId.trim() === '') {
+      console.warn(`[RoomHandler] Invalid roomId received from ${socket.id}`);
+      socket.emit(SOCKET_EVENTS.SERVER.ERROR, { message: "Invalid Room ID" });
+      return;
+    }
     handleJoinRoom(io, socket, roomId);
   });
 
