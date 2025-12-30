@@ -35,10 +35,17 @@ const handleExecuteRequest = async (
 export const registerRequestHandlers = (io: Server, socket: Socket) => {
   
   socket.on(SOCKET_EVENTS.CLIENT.EXECUTE_REQUEST, ({ roomId }) => {
-    if (!roomId) {
-        console.warn(`[Handler] EXECUTE_REQUEST ignored: No roomId provided by ${socket.id}`);
-        return;
+    if (typeof roomId !== 'string') {
+      console.warn(`[Handler] EXECUTE_REQUEST ignored: Invalid roomId type provided by ${socket.id}`);
+      return;
     }
-    handleExecuteRequest(io, roomId);
+
+    const trimmedRoomId = roomId.trim();
+    if (!trimmedRoomId) {
+      console.warn(`[Handler] EXECUTE_REQUEST ignored: Empty roomId provided by ${socket.id}`);
+      return;
+    }
+
+    handleExecuteRequest(io, trimmedRoomId);
   });
 };
