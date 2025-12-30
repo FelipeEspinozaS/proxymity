@@ -26,7 +26,7 @@ const handleExecuteRequest = async (
     stateStore.setLoading(roomId, false);
     
     io.to(roomId).emit(SOCKET_EVENTS.SERVER.ERROR, { 
-      message: "Internal Proxy Error. Please try again." 
+      message: 'Internal Proxy Error. Please try again.' 
     });
   }
 };
