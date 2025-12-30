@@ -44,7 +44,21 @@ class StateStore {
     const room = this.getOrCreateRoom(roomId);
     
     if (typeof url === 'string') {
-      room.request.url = url.slice(0, 2048); 
+      const trimmedUrl = url.trim();
+
+      if (!trimmedUrl) {
+        console.warn(`[Store] Empty URL ignored for room ${roomId}`);
+        return room;
+      }
+
+      try {
+        // Validate that the URL is well-formed (includes scheme, etc.)
+        // This will throw if the URL is malformed.
+        new URL(trimmedUrl);
+        room.request.url = trimmedUrl.slice(0, 2048);
+      } catch {
+        console.warn(`[Store] Invalid URL '${url}' ignored for room ${roomId}`);
+      }
     }
     return room;
   }
