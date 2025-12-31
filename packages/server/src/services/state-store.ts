@@ -34,53 +34,67 @@ class StateStore {
     return room;
   }
 
-  public updateMethod(roomId: string, method: HttpMethod) {
+  public updateMethod(roomId: string, method: HttpMethod): HttpMethod | null {
     const room = this.getOrCreateRoom(roomId);
     
     const validMethods: HttpMethod[] = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
+    
     if (validMethods.includes(method)) {
       room.request.method = method;
+      return method;
     } else {
       console.warn(`[Store] Invalid method '${method}' ignored for room ${roomId}`);
+      return null;
     }
-    return room;
   }
 
-  public updateUrl(roomId: string, url: string) {
+  public updateUrl(roomId: string, url: string): string | null {
     const room = this.getOrCreateRoom(roomId);
     
     if (typeof url === 'string') {
-      room.request.url = url.slice(0, 2048);
+      const sanitizedUrl = url.slice(0, 2048);
+      room.request.url = sanitizedUrl;
+      return sanitizedUrl;
     }
     
-    return room;
-}
+    return null;
+  }
 
-  public updateBody(roomId: string, body: string) {
+  public updateBody(roomId: string, body: string): string | null {
     const room = this.getOrCreateRoom(roomId);
     
     if (typeof body === 'string') {
       if (body.length > 100_000) { // Limit ~100KB
         console.warn(`[Store] Body too large rejected for room ${roomId}`);
-        return room;
+        return null;
       }
       room.request.body = body;
+      return body;
     }
-    return room;
+    
+    return null;
   }
 
-  public updateKeyValueList(roomId: string, type: 'headers' | 'queryParams', list: IKeyValue[]) {
+  public updateKeyValueList(
+    roomId: string, 
+    type: 'headers' | 'queryParams', 
+    list: IKeyValue[]
+  ): IKeyValue[] | null {
     const room = this.getOrCreateRoom(roomId);
     
     if (Array.isArray(list)) {
       let trimmedList = list;
+      
       if (list.length > 50) {
         console.warn(`[Store] Too many ${type} items, trimming list.`);
         trimmedList = list.slice(0, 50);
       }
+      
       room.request[type] = trimmedList;
+      return trimmedList;
     }
-    return room;
+    
+    return null;
   }
 
   public setLoading(roomId: string, isLoading: boolean) {
