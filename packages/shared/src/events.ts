@@ -1,23 +1,25 @@
-// /packages/shared/src/events.ts
+// packages/shared/src/events.ts
 
 export const SOCKET_EVENTS = {
-  // Eventos que envía el CLIENTE
   CLIENT: {
-    JOIN_ROOM: 'client:join_room',       // "Quiero entrar a la sala X"
-    UPDATE_FIELD: 'client:update_field', // "Cambié la URL"
-    UPDATE_BODY: 'client:update_body',   // "Escribí en el editor JSON"
-    ADD_HEADER: 'client:add_header',
-    REMOVE_HEADER: 'client:remove_header',
-    EXECUTE_REQUEST: 'client:execute_request', // "¡Fuego!" (Click en Send)
+    JOIN_ROOM: 'client:join_room',
+    LEAVE_ROOM: 'client:leave_room',
+
+    UPDATE_METHOD: 'client:update_method', // Payload: "GET" | "POST"
+    UPDATE_URL: 'client:update_url',       // Payload: string
+    UPDATE_HEADERS: 'client:update_headers',   // Payload: IKeyValue[]
+    UPDATE_PARAMS: 'client:update_params',     // Payload: IKeyValue[]
+    UPDATE_BODY: 'client:update_body',         // Payload: string (JSON)
+
+    EXECUTE_REQUEST: 'client:execute_request', // Payload: IRequestData (opcional, o usa el estado del server)
   },
   
-  // Eventos que envía el SERVIDOR
   SERVER: {
-    SYNC_STATE: 'server:sync_state',     // "Este es el estado actual de la sala"
-    BROADCAST_FIELD: 'server:broadcast_field', // "Alguien cambió esto, actualízate"
-    REQUEST_STARTED: 'server:request_started', // "Petición en curso..."
-    REQUEST_COMPLETE: 'server:request_complete', // "Aquí tienes la respuesta"
-    USER_COUNT: 'server:user_count',     // "Hay 3 usuarios conectados"
-    ERROR: 'server:error'
+    SYNC_STATE: 'server:sync_state',     // Payload: IRoomState completo
+    USER_COUNT: 'server:user_count',     // Payload: number
+    BROADCAST_CHANGE: 'server:broadcast_change', 
+    REQUEST_STARTED: 'server:request_started',   // "Loading..."
+    REQUEST_COMPLETE: 'server:request_complete', // Payload: IResponseData
+    ERROR: 'server:error'                        // Payload: { message: string }
   }
 } as const;

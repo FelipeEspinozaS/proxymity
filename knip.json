@@ -4,10 +4,6 @@
     "packages/client/src/store/useAppStore.ts"
   ],
   "ignoreDependencies": [
-    "axios",
-    "cors",
-    "dotenv",
-    "@types/cors",
     "ts-node",
     "tsconfig-paths"
   ]
