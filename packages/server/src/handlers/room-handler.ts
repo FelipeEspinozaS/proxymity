@@ -32,28 +32,58 @@ const handleDisconnecting = (io: Server, socket: Socket) => {
 };
 
 const handleUpdateMethod = (socket: Socket, roomId: string, method: HttpMethod) => {
-  stateStore.updateMethod(roomId, method);
-  socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { field: 'method', value: method });
+  const acceptedMethod = stateStore.updateMethod(roomId, method);
+  
+  if (acceptedMethod) {
+    socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { 
+      field: 'method', 
+      value: acceptedMethod 
+    });
+  }
 };
 
 const handleUpdateUrl = (socket: Socket, roomId: string, url: string) => {
-  stateStore.updateUrl(roomId, url);
-  socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { field: 'url', value: url });
-};
-
-const handleUpdateHeaders = (socket: Socket, roomId: string, headers: IKeyValue[]) => {
-  stateStore.updateKeyValueList(roomId, 'headers', headers);
-  socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { field: 'headers', value: headers });
-};
-
-const handleUpdateParams = (socket: Socket, roomId: string, params: IKeyValue[]) => {
-  stateStore.updateKeyValueList(roomId, 'queryParams', params);
-  socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { field: 'queryParams', value: params });
+  const acceptedUrl = stateStore.updateUrl(roomId, url);
+  
+  if (acceptedUrl !== null) { 
+    socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { 
+      field: 'url', 
+      value: acceptedUrl 
+    });
+  }
 };
 
 const handleUpdateBody = (socket: Socket, roomId: string, body: string) => {
-  stateStore.updateBody(roomId, body);
-  socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { field: 'body', value: body });
+  const acceptedBody = stateStore.updateBody(roomId, body);
+  
+  if (acceptedBody !== null) {
+    socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { 
+      field: 'body', 
+      value: acceptedBody 
+    });
+  }
+};
+
+const handleUpdateHeaders = (socket: Socket, roomId: string, headers: IKeyValue[]) => {
+  const acceptedHeaders = stateStore.updateKeyValueList(roomId, 'headers', headers);
+  
+  if (acceptedHeaders) {
+    socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { 
+      field: 'headers', 
+      value: acceptedHeaders 
+    });
+  }
+};
+
+const handleUpdateParams = (socket: Socket, roomId: string, params: IKeyValue[]) => {
+  const acceptedParams = stateStore.updateKeyValueList(roomId, 'queryParams', params);
+  
+  if (acceptedParams) {
+    socket.to(roomId).emit(SOCKET_EVENTS.SERVER.BROADCAST_CHANGE, { 
+      field: 'queryParams', 
+      value: acceptedParams 
+    });
+  }
 };
 
 export const registerRoomHandlers = (io: Server, socket: Socket) => {
