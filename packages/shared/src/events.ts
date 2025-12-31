@@ -3,6 +3,7 @@
 export const SOCKET_EVENTS = {
   CLIENT: {
     JOIN_ROOM: 'client:join_room',
+    LEAVE_ROOM: 'client:leave_room',
 
     UPDATE_METHOD: 'client:update_method', // Payload: "GET" | "POST"
     UPDATE_URL: 'client:update_url',       // Payload: string
