@@ -17,6 +17,20 @@ const handleJoinRoom = (io: Server, socket: Socket, roomId: string) => {
   console.log(`[Room] ${socket.id} joined ${roomId}. State synced.`);
 };
 
+const handleLeaveRoom = (io: Server, socket: Socket, roomId: string) => {
+  if (!roomId || typeof roomId !== 'string') return;
+
+  socket.leave(roomId);
+
+  const userCount = io.sockets.adapter.rooms.get(roomId)?.size || 0;
+  stateStore.updateUserCount(roomId, userCount);
+
+  if (userCount > 0) {
+    io.to(roomId).emit(SOCKET_EVENTS.SERVER.USER_COUNT, userCount);
+  }
+
+  console.log(`[Room] ${socket.id} left ${roomId}. Users remaining: ${userCount}`);
+};
 
 const handleDisconnecting = (io: Server, socket: Socket) => {
   for (const roomId of socket.rooms) {
@@ -94,6 +108,10 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
       return;
     }
     handleJoinRoom(io, socket, roomId);
+  });
+
+  socket.on(SOCKET_EVENTS.CLIENT.LEAVE_ROOM, (roomId: string) => {
+    handleLeaveRoom(io, socket, roomId);
   });
 
   socket.on('disconnecting', () => {
