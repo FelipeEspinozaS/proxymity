@@ -76,7 +76,7 @@ export const useRoomConnection = (roomId: string) => {
         socket.emit(SOCKET_EVENTS.CLIENT.LEAVE_ROOM, roomId);
       }
     };
-  }, []);
+  }, [roomId, setRequest, setMethod, setUrl, setBody, setHeaders, setQueryParams, setResponse, setLoading, setActiveUsers]);
 
   const sendRequest = () => {
     const currentRequest = useAppStore.getState().request;
