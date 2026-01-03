@@ -36,6 +36,9 @@ export const useRoomConnection = (roomId: string) => {
         case 'body': setBody(updatedData.value); break;
         case 'headers': setHeaders(updatedData.value); break;
         case 'queryParams': setQueryParams(updatedData.value); break;
+        default: 
+          console.warn(`Unknown field broadcasted from server: ${updatedData.field}`);
+          break;
       }
     };
 
