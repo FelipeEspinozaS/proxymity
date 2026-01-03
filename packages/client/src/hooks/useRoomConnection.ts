@@ -74,7 +74,9 @@ export const useRoomConnection = (roomId: string) => {
       socket.off(SOCKET_EVENTS.SERVER.REQUEST_STARTED, onRequestStarted);
       socket.off(SOCKET_EVENTS.SERVER.REQUEST_COMPLETE, onRequestComplete);
       socket.off(SOCKET_EVENTS.SERVER.USER_COUNT, onUserCount);
-      socket.disconnect();
+      if (socket.connected) {
+        socket.emit(SOCKET_EVENTS.CLIENT.LEAVE_ROOM, roomId);
+      }
     };
   }, []);
 
