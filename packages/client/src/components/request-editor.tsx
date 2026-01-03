@@ -34,22 +34,32 @@ export function RequestEditor({ roomId }: RequestEditorProps) {
   const removeQueryParam = useAppStore((state) => state.removeQueryParam);
   const updateQueryParam = useAppStore((state) => state.updateQueryParam);
 
+  const emitWithConnection = (event: string, data: any) => {
+    if (socket.connected) {
+      socket.emit(event, data);
+    } else {
+      socket.once('connect', () => {
+        socket.emit(event, data);
+      });
+    }
+  }
+
   const handleBodyChange = (newBody: string | undefined) => {
     const bodyContent = newBody || "";
     setBody(bodyContent);
-    socket.emit(SOCKET_EVENTS.CLIENT.UPDATE_BODY, { roomId, body: bodyContent });
+    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_BODY, { roomId, body: bodyContent });
   }
 
   const handleHeadersChange = (action: () => void) => {
     action();
     const updatedHeaders = useAppStore.getState().request.headers;
-    socket.emit(SOCKET_EVENTS.CLIENT.UPDATE_HEADERS, { roomId, headers: updatedHeaders });
+    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_HEADERS, { roomId, headers: updatedHeaders });
   }
 
   const handleParamsChange = (action: () => void) => {
     action();
     const updatedParams = useAppStore.getState().request.queryParams;
-    socket.emit(SOCKET_EVENTS.CLIENT.UPDATE_PARAMS, { roomId, queryParams: updatedParams });
+    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_PARAMS, { roomId, queryParams: updatedParams });
   }
 
   return (
