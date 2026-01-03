@@ -62,9 +62,7 @@ export const useRoomConnection = (roomId: string) => {
 
     if (socket.connected) {
       onConnect();
-    } else {
-      socket.connect();
-    }
+    } 
 
     return () => {
       socket.off('connect', onConnect);
