@@ -81,7 +81,8 @@ export const useRoomConnection = (roomId: string) => {
   const sendRequest = () => {
     const currentRequest = useAppStore.getState().request;
     console.log("Sending request:", currentRequest);
-    socket.emit(SOCKET_EVENTS.CLIENT.EXECUTE_REQUEST, roomId);
+    console.log(roomId);
+    socket.emit(SOCKET_EVENTS.CLIENT.EXECUTE_REQUEST, { roomId });
   };
 
   return { sendRequest };
