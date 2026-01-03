@@ -51,15 +51,23 @@ export function RequestEditor({ roomId }: RequestEditorProps) {
   }
 
   const handleHeadersChange = (action: () => void) => {
-    action();
-    const updatedHeaders = useAppStore.getState().request.headers;
-    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_HEADERS, { roomId, headers: updatedHeaders });
+    try{ 
+      action();
+      const updatedHeaders = useAppStore.getState().request.headers;
+      emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_HEADERS, { roomId, headers: updatedHeaders });
+    } catch (error) {
+      console.error("Failed to update headers and emit socket event:", error);
+    }
   }
 
   const handleParamsChange = (action: () => void) => {
-    action();
-    const updatedParams = useAppStore.getState().request.queryParams;
-    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_PARAMS, { roomId, queryParams: updatedParams });
+    try {
+      action();
+      const updatedParams = useAppStore.getState().request.queryParams;
+      emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_PARAMS, { roomId, queryParams: updatedParams });
+    } catch (error) {
+      console.error("Failed to update query parameters and emit socket event:", error);
+    }
   }
 
   return (
