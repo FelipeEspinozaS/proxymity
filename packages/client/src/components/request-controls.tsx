@@ -27,15 +27,25 @@ export function RequestControls({ roomId, onSend }: RequestControlsProps) {
   const setUrl = useAppStore((state) => state.setUrl);
   const setMethod = useAppStore((state) => state.setMethod);
 
+  const emitWithConnection = (event: string, data: any) => {
+    if (socket.connected) {
+      socket.emit(event, data);
+    } else {
+      socket.once('connect', () => {
+        socket.emit(event, data);
+      });
+    }
+  }
+
   const handleMethodChange = (newMethod: HttpMethod) => {
     setMethod(newMethod);
-    socket.emit(SOCKET_EVENTS.CLIENT.UPDATE_METHOD, { roomId, method: newMethod });
+    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_METHOD, { roomId, method: newMethod });
   }
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUrl = e.target.value;
     setUrl(newUrl);
-    socket.emit(SOCKET_EVENTS.CLIENT.UPDATE_URL, { roomId, url: newUrl });
+    emitWithConnection(SOCKET_EVENTS.CLIENT.UPDATE_URL, { roomId, url: newUrl });
   }
 
   return (
